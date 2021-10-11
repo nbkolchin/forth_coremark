@@ -6,7 +6,7 @@
    [char] " parse  ( c-addr u )
    here over allot
    swap cmove ;
-\ [endif]
+\ [then]
 
 : create_pat  ( u "<spaces>name" -- )
    create
