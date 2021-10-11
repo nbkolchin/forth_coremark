@@ -22,12 +22,51 @@
 2variable start_time_var
 2variable stop_time_var
 
+[undefined] d> [if]
 : d>  ( d1 d2 -- flag )  \ SwiftForth
    2over 2over d= >r     \ SwiftForth
    d< r> or invert ;     \ SwiftForth
+[endif]
 
 \	This function will be called right before starting the timed portion of the benchmark.
 \ void start_time(void)
+[defined] vfxforth [if]
+: start_time  ( -- )
+   (ticks) #1000 um* start_time_var 2! ;  \ Vfx
+: stop_time  ( -- )
+   (ticks) #1000 um* stop_time_var 2! ;  \ Vfx
+[endif]
+
+[defined] swiftforth [if]
+: start_time  ( -- )
+   ucounter start_time_var 2! ;  \ SwiftForth
+: stop_time  ( -- )
+   ucounter stop_time_var 2! ;  \ SwiftForth
+[endif]
+
+[defined] swiftforth [if]
+: start_time  ( -- )
+   ucounter start_time_var 2! ;  \ SwiftForth
+: stop_time  ( -- )
+   ucounter stop_time_var 2! ;  \ SwiftForth
+[endif]
+
+\ NOTE: current "stable" gforth-0.7.3 doesn't define this...
+\ To run with old versions you must:
+\ $ gforth -e ": GFORTH ;" run.fth
+[defined] gforth [if]
+: start_time  ( -- )
+   utime start_time_var 2! ;  \ gforth
+: stop_time  ( -- )
+   utime stop_time_var 2! ;  \ gforth
+[endif]
+
+[undefined] start_time [if]
+." unable to detect forth system. You must provide start_time stop_time words"
+bye
+[endif]
+
+0 [IF]
 : start_time  ( -- )
    utime start_time_var 2! ;  \ gforth
 \   ucounter start_time_var 2! ;  \ SwiftForth
@@ -39,6 +78,7 @@
    utime stop_time_var 2! ;  \ gforth
 \   ucounter stop_time_var 2! ;  \ SwiftForth
 \   (ticks) #1000 um* stop_time_var 2! ;  \ Vfx
+[ENDIF]
 
 \	Return an abstract "ticks" number that signifies time on the system.
 \ typedef ee_u32 CORE_TICKS

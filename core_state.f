@@ -1,10 +1,12 @@
 
 \ Parse ccc delimited by " (double-quote),
 \ reserve data space and store ccc
+\ [undefined] ," [if]
 : ,"  ( "ccc<quote>" -- )
    [char] " parse  ( c-addr u )
    here over allot
    swap cmove ;
+\ [endif]
 
 : create_pat  ( u "<spaces>name" -- )
    create
